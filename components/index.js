@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import gestureObserver from '../utils/gesture';
 import './style.scss';
 
 class ReactRuler extends Component {
+  static propTypes = {
+    value: PropTypes.number,
+    start: PropTypes.number,
+    end: PropTypes.number,
+    step: PropTypes.number,
+    handleDragChange: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
     const {value } = this.props;
@@ -149,7 +157,7 @@ class ReactRuler extends Component {
     const { value, percentage } = this.state;
     const { start } = this.props;
     return (
-      <div className="iqc-sensitive-ruler-wrapper">
+      <div className="react-ruler-wrapper">
         <div className="ruler-container">
           <div className="ruler-wrapper" ref={(list) => { this.ruler = list; }}>
             <div className="ruler-list">

@@ -1,15 +1,31 @@
 import React, { Component } from 'react';
-import { SENSITIVE_TYPE } from './constants';
+import { Form } from 'antd';
+import { connect } from 'react-redux';
 import ReactRuler from '../components/index';
+import RulerInput from './RulerInput';
 import logo from './logo.svg';
 import './App.css';
+import 'antd/dist/antd.css';
+
+const FormItem = Form.Item;
 
 class App extends Component {
-  init = () => {
-    console.log(1111);
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 57
+    }
   }
+
+  handleDragChange = (value) => {
+    this.setState({value});
+  }
+
   render() {
-    this.init();
+    const { value } = this.state;
+    const { getFieldDecorator } = this.props.form;
+
+
     return (
       <div className="App">
         <header className="App-header">
@@ -20,22 +36,37 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
         <div className="content">
-          {
-            Object.values(SENSITIVE_TYPE).map((item, index) => {
-              return item.step ?
-                <ReactRuler
-                  value={item.value}
-                  handleDragChange={this.handleDragChange}
-                  start={item.min}
-                  end={item.max}
-                  step={item.step}
-                /> : null
-            })
-          }
+          <div className="custom-ruler">
+            <ReactRuler
+              value={value}
+              handleDragChange={this.handleDragChange}
+              start={20}
+              end={99}
+              step={2}
+            />
+          </div>
+          <div className="form-ruler">
+            <Form>
+              <FormItem>
+                {
+                  getFieldDecorator('score', {
+                    initialValue: 13,
+                    rules: [{ type: 'number' }],
+                  })(
+                    <RulerInput
+                      start={10}
+                      end={19}
+                      step={1}
+                    />
+                  )
+                }
+              </FormItem>
+            </Form>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-export default App;
+export default Form.create()(App);
