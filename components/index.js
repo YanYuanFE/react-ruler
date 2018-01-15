@@ -20,7 +20,8 @@ class ReactRuler extends Component {
     this.state = {
       value: value,
       percentage: 0.0001,
-      offsetWidth: 0
+      offsetWidth: 0,
+      test: 0.0001
     };
   }
 
@@ -47,7 +48,7 @@ class ReactRuler extends Component {
     const { start, end, value } = this.props;
     const left = offsetWidth || value;
     const percentage =  (left - start) / (end - start);
-    this.setState({percentage});
+    this.setState({percentage: Math.max(percentage, 0.0001)});
   }
 
   tranformScore = (dragVal) => {
@@ -81,12 +82,10 @@ class ReactRuler extends Component {
 
       if(currPercentage > 0.99) {
         currPercentage = 0.9999;
-      } else if(currPercentage < 0.01) {
-        currPercentage = 0.0001;
       }
 
       this.setState({
-        percentage: currPercentage,
+        percentage: Math.max(currPercentage, 0.0001),
         offsetWidth: currPercentage * width
       }, () => this.onDrag(this.state.offsetWidth));
     };
@@ -168,7 +167,7 @@ class ReactRuler extends Component {
             <div
               className="ruler-drag"
               style={{
-                transform: `scaleX(${Math.max(percentage, 0.0001)})`
+                transform: `scaleX(${percentage})`
               }}
             >
               <div

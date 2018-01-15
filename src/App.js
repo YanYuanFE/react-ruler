@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Form } from 'antd';
-import { connect } from 'react-redux';
 import ReactRuler from '../components/index';
 import RulerInput from './RulerInput';
 import logo from './logo.svg';
