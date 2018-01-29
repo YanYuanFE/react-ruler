@@ -5,7 +5,7 @@ A Ruler Component of React
 
 ![设计稿](./src/assets/ui.png "设计稿")
 
-* 为了实现上面的设计，折腾了一个这样的轮子。 *
+*为了实现上面的设计，折腾了一个这样的轮子。*
 
 ### 效果如下
 ![效果](./src/assets/result.png "效果")
@@ -19,7 +19,7 @@ A Ruler Component of React
 
 ## Installation
 
-### npm
+### npm(还未支持)
 
 ```bash
 npm install react-ruler --save
@@ -31,7 +31,7 @@ npm install react-ruler --save
 
 ```javascript
    propTypes: {
-		value: PropTypes.number,
+    value: PropTypes.number,
     start: PropTypes.number,
     end: PropTypes.number,
     step: PropTypes.number,
