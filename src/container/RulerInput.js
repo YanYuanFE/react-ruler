@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
-import ReactRuler from '../components/index';
+import Ruler from '../components/ruler';
 
 class RulerInput extends Component {
   static propTypes = {
@@ -67,12 +67,12 @@ class RulerInput extends Component {
             onChange={this.handleChange}
             style={{width: '148px'}}/>
         </div>
-        <ReactRuler
+        <Ruler
           value={score}
           start={start}
           end={end}
           step={step}
-          handleDragChange={this.handleDragChange}
+          onDrag={this.handleDragChange}
         />
       </div>
     );

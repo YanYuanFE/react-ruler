@@ -1,0 +1,64 @@
+.react-ruler-wrapper .ruler-container {
+  margin-top: 60px;
+}
+.react-ruler-wrapper .ruler-wrapper {
+  position: relative;
+}
+.react-ruler-wrapper .ruler-list {
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid #dee3e6;
+}
+.react-ruler-wrapper .ruler-list .line {
+  height: 6px;
+  border-left: 1px solid #dee3e6;
+}
+.react-ruler-wrapper .ruler-list .rule-mark .line-text {
+  position: absolute;
+  top: -22px;
+  margin-left: -4px;
+  font-size: 10px;
+  color: #a3afb7;
+}
+.react-ruler-wrapper .ruler-list .rule-mark .line {
+  border-left: 1px solid #dee3e6;
+  height: 20px;
+}
+.react-ruler-wrapper .ruler-underline {
+  width: 296px;
+  height: 1px;
+  background-color: #dee3e6;
+}
+.react-ruler-wrapper .ruler-drag {
+  position: absolute;
+  left: 0;
+  bottom: 46px;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  -webkit-transform-origin: left;
+          transform-origin: left;
+}
+.react-ruler-wrapper .ruler-drag .ruler-point {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+.react-ruler-wrapper .ruler-drag .ruler-point .point {
+  position: absolute;
+  padding: 0px 9px;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #2acd8f;
+  color: #FFFFFF;
+  left: -18px;
+  margin-bottom: 5px;
+  line-height: 24px;
+}
+.react-ruler-wrapper .ruler-drag .ruler-point .ruler-line {
+  width: 2px;
+  height: 38px;
+  background-color: #2acd8f;
+  cursor: pointer;
+  margin-top: 29px;
+}

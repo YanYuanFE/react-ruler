@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
-import PropTypes from "prop-types";
-import gestureObserver from '../utils/gesture';
-import './style.scss';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import gestureObserver from '../../utils/gesture';
+import './index.less';
 
-class ReactRuler extends Component {
+class Ruler extends PureComponent {
   static propTypes = {
     value: PropTypes.number,
     start: PropTypes.number,
     end: PropTypes.number,
     step: PropTypes.number,
-    handleDragChange: PropTypes.func,
+    onDrag: PropTypes.func,
+    className: PropTypes.string,
   };
 
   constructor(props) {
     super(props);
-    const {value } = this.props;
+    const { value } = this.props;
     this.startPercentage = 0;
     this.containerWidth = 0;
     this.state = {
@@ -52,7 +53,7 @@ class ReactRuler extends Component {
   }
 
   tranformScore = (dragVal) => {
-    const { start, end, handleDragChange } = this.props;
+    const { start, end, onDrag } = this.props;
     let value =  Math.round((end - start) * dragVal / this.containerWidth + start);
     if (value < start) {
       value = start;
@@ -60,7 +61,7 @@ class ReactRuler extends Component {
       value = end;
     }
     this.setState({value});
-    handleDragChange(value);
+    onDrag(value);
   }
 
   registerDragListener = () => {
@@ -177,7 +178,7 @@ class ReactRuler extends Component {
                   transform: `scaleX(${1 / percentage})`
                 }}
               >
-                <div className="point">扣{value || start}</div>
+                <div className="point">{value || start}</div>
                 <div className="ruler-line" />
               </div>
             </div>
@@ -188,4 +189,4 @@ class ReactRuler extends Component {
   }
 }
 
-export default ReactRuler;
+export default Ruler;

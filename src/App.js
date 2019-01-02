@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Form } from 'antd';
-import ReactRuler from '../components/index';
-import RulerInput from './RulerInput';
-import logo from './logo.svg';
-import './App.css';
+import Ruler from './components/ruler';
+import RulerInput from './container/RulerInput';
+import logo from './assets/logo.svg';
 import 'antd/dist/antd.css';
 
 const FormItem = Form.Item;
@@ -29,22 +28,25 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Welcome to React Ruler Component</h1>
         </header>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
         <div className="content">
+          <h3>普通用法</h3>
           <div className="custom-ruler">
-            <ReactRuler
+            <Ruler
               value={value}
-              handleDragChange={this.handleDragChange}
+              onDrag={this.handleDragChange}
               start={20}
               end={99}
               step={2}
+              className="ruler"
             />
           </div>
           <div className="form-ruler">
+            <h3>与antd的Form结合使用</h3>
             <Form>
               <FormItem>
                 {

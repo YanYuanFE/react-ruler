@@ -1,5 +1,6 @@
-# react-ruler
-A Ruler Component of React
+# rc-ruler
+
+> Ruler component for React
 
 # Why
 
@@ -13,29 +14,59 @@ A Ruler Component of React
 * 仅支持PC端
 * 支持拖拽、点击来选择相应的值
 * 可以和Ant-Design的Form结合
-* 依赖rxjs处理事件
+* 依赖rxjs处理事件(按需加载)
 
 
 
-## Installation
-
-### npm(还未支持)
+## Install
 
 ```bash
-npm install react-ruler --save
+npm install rc-ruler --save
 ```
 
 ## Usage
 
-## Prop types
+``` js
+import Ruler from 'rc-ruler';
+import 'rc-ruler/dist/index.css';
+```
 
-```javascript
+``` js
+handleDragChange = (value) => {
+   console.log(value);
+}
+
+<Ruler
+   value={value}
+   onDrag={this.handleDragChange}
+   start={20}
+   end={99}
+   step={2}
+/>
+```
+
+## Proptypes
+
+```js
    propTypes: {
-    value: PropTypes.number,
-    start: PropTypes.number,
-    end: PropTypes.number,
-    step: PropTypes.number,
-    handleDragChange: PropTypes.func,
+
+      // current value
+      value: PropTypes.number,
+
+      // start value
+      start: PropTypes.number,
+
+      // end value
+      end: PropTypes.number,
+
+      // step of drag
+      step: PropTypes.number,
+
+      // handle drag function
+      onDrag: PropTypes.func,
+
+      // class of component
+      className: PropTypes.string,
    }
 ```
 

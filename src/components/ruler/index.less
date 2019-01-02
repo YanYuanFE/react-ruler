@@ -1,0 +1,76 @@
+@font-size-normal: 14px;
+@font-size-big: 48px;
+@white: #FFFFFF;
+@border-color: #dee3e6;
+@primary-color: #2acd8f;
+
+.react-ruler-wrapper {
+  .ruler-container {
+    margin-top: 60px;
+  }
+  .ruler-wrapper {
+    position: relative;
+  }
+  .ruler-list {
+    display: flex;
+    align-items: flex-end;
+    border-bottom: 1px solid @border-color;
+    .line {
+      height: 6px;
+      border-left: 1px solid @border-color;
+    }
+    .rule-mark {
+      .line-text {
+        position: absolute;
+        top: -22px;
+        margin-left: -4px;
+        font-size: 10px;
+        color: #a3afb7;
+      }
+      .line {
+        border-left: 1px solid @border-color;
+        //background-color: @border-color;
+        height: 20px;
+      }
+    }
+  }
+  .ruler-underline {
+    width: 296px;
+    height: 1px;
+    background-color: @border-color;
+  }
+  .ruler-drag {
+    position: absolute;
+    left: 0;
+    bottom: 46px;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+    transform-origin: left;
+    .ruler-point {
+      position: absolute;
+      right: 0;
+      cursor: pointer;
+      .point {
+        position: absolute;
+        padding: 0px 9px;
+        border-radius: 4px;
+        font-size: @font-size-normal;
+        background-color: @primary-color;
+        color: @white;
+        left: -18px;
+        margin-bottom: 5px;
+        line-height: 24px;
+      }
+      .ruler-line {
+        width: 2px;
+        height: 38px;
+        background-color: @primary-color;
+        cursor: pointer;
+        margin-top: 29px;
+      }
+    }
+  }
+}
+
+
