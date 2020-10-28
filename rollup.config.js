@@ -4,22 +4,22 @@ import postcss from 'rollup-plugin-postcss';
 import commonjs from 'rollup-plugin-commonjs';
 
 export default {
-    moduleName: 'Ruler',
     input: 'src/components/ruler/index.js',
-    external: ['react', 'react-dom', 'prop-types'],
-    globals: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
-        'prop-types': 'PropTypes',
-    },
+    external: ['react', 'react-dom'],
     output: [{
         name: 'Ruler',
         format: 'es',
-        file: 'es/index.js'
+        file: 'es/index.js',
+        globals: {
+            react: 'React',
+        },
     }, {
         name: 'Ruler',
         format: 'umd',
-        file: 'lib/index.js'
+        file: 'lib/index.js',
+        globals: {
+            react: 'React',
+        },
     }],
     plugins: [
         resolve(),

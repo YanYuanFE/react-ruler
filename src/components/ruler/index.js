@@ -1,144 +1,143 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import gestureObserver from '../../utils/gesture';
 import './index.less';
 
-class Ruler extends PureComponent {
-  static propTypes = {
-    value: PropTypes.number,
-    start: PropTypes.number,
-    end: PropTypes.number,
-    step: PropTypes.number,
-    onDrag: PropTypes.func,
-    className: PropTypes.string,
-  };
+// static propTypes = {
+//   value: PropTypes.number,
+//   start: PropTypes.number,
+//   end: PropTypes.number,
+//   step: PropTypes.number,
+//   onDrag: PropTypes.func,
+//   className: PropTypes.string,
+// };
+const Ruler = ({value, start, end, step, onChange, className = '' }) =>  {
+  const [val, setValue] = useState(value);
+  const [percentage, setPercent] = useState(0.0001);
+  const [offsetWidth, setOffsetWidth] = useState(0);
+  const startPercentRef = useRef(0);
+  const containerWidthRef = useRef(0);
+  const rulerRef = useRef();
+  const pointRef = useRef();
 
-  constructor(props) {
-    super(props);
-    const { value } = this.props;
-    this.startPercentage = 0;
-    this.containerWidth = 0;
-    this.state = {
-      value: value,
-      percentage: 0.0001,
-      offsetWidth: 0,
-      test: 0.0001
-    };
-  }
 
-  componentDidMount() {
-    this.registerDragListener();
-    this.transform();
-  }
+  useEffect(() => {
+    transform();
+  }, []);
 
-  componentWillReceiveProps(nextProps) {
-    const { start, end } = this.props;
-    if('value' in nextProps) {
-      let value = nextProps.value;
-      if (value < start) {
-        value = start;
-      } else if(value > end) {
-        value = end;
-      }
-      this.setState({value});
-      this.transform(value);
+  useEffect(() => {
+    onChange(val);
+  }, [val]);
+
+  useEffect(() => {
+    initRulerDrag();
+  }, [rulerRef.current]);
+
+  useEffect(() => {
+    initPointDrag();
+  }, [pointRef.current]);
+
+  // useEffect(() => {
+  //   let newVal = value < start ? start : value > end ? end : value;
+  //   console.log("props", value, newVal)
+  //   setValue(newVal);
+  //   transform(newVal);
+  // }, [value, start, end]);
+
+  useEffect(() => {
+    if(!offsetWidth) return;
+    let val =  Math.round((end - start) * offsetWidth / containerWidthRef.current + start);
+    if (val < start) {
+      val = start;
+    } else if(val > end) {
+      val = end;
     }
-  }
+    setValue(val);
+  }, [offsetWidth]);
 
-  transform = (offsetWidth) => {
-    const { start, end, value } = this.props;
+  const transform = (offsetWidth) => {
     const left = offsetWidth || value;
     const percentage =  (left - start) / (end - start);
-    this.setState({percentage: Math.max(percentage, 0.0001)});
+    setPercent(Math.max(percentage, 0.0001));
   }
 
-  tranformScore = (dragVal) => {
-    const { start, end, onDrag } = this.props;
-    let value =  Math.round((end - start) * dragVal / this.containerWidth + start);
-    if (value < start) {
-      value = start;
-    } else if(value > end) {
-      value = end;
-    }
-    this.setState({value});
-    onDrag(value);
-  }
+  useEffect(() => {
+    console.log("offset", percentage * containerWidthRef.current);
+    setOffsetWidth(percentage * containerWidthRef.current);
+  }, [percentage])
 
-  registerDragListener = () => {
-    const { point, ruler } = this;
+  const initRulerDrag = () => {
+    if(!rulerRef.current) return;
 
-    const width = ruler.offsetWidth;
-    this.containerWidth = width;
+    const width = rulerRef.current.offsetWidth;
+    containerWidthRef.current = width;
 
-    const dragObserver = gestureObserver(point);
-
-    const dragStart = ({ x }) => {
-      this.startPercentage =  this.state.percentage;
-
-      this.onDragStart(x);
-    };
-
-    const dragMoves = ({ x }) => {
-      let currPercentage =  this.startPercentage + x / width;
-
-      if(currPercentage > 0.99) {
-        currPercentage = 0.9999;
-      }
-
-      this.setState({
-        percentage: Math.max(currPercentage, 0.0001),
-        offsetWidth: currPercentage * width
-      }, () => this.onDrag(this.state.offsetWidth));
-    };
-
-    const dragEnds = () => {
-      this.startPercentage = 0;
-      this.onDragEnd(this.state.percentage);
-    };
-
-    dragObserver.horizontalMoveStarts.forEach(dragStart);
-
-    dragObserver.holds.forEach(dragStart);
-
-    dragObserver.dragMoves.forEach(dragMoves);
-
-    dragObserver.dragMoveEnds.forEach(dragEnds);
-
-    dragObserver.horizontalMoves.forEach(dragMoves);
-
-    dragObserver.horizontalMoveEnds.forEach(dragEnds);
-
-    const barClickObserver = gestureObserver(ruler);
+    const barClickObserver = gestureObserver(rulerRef.current);
 
     const barClick = ({ x }) => {
-      const wrapperLeft = ruler.getBoundingClientRect().left;
+      const wrapperLeft = rulerRef.current.getBoundingClientRect().left;
       let currPercentage = (x - wrapperLeft) / width;
-      console.log(x - wrapperLeft);
       if (currPercentage < 0) currPercentage = 0.0001;
-      this.setState({
-        percentage: currPercentage,
-        offsetWidth: currPercentage * width
-      }, () => this.onDrag(this.state.offsetWidth));
+
+      setPercent(currPercentage);
     };
 
     barClickObserver.clicks.forEach(barClick);
   }
 
-  onDragStart = (x) => {
+  const dragMoves = ({ x }) => {
+    setPercent(prev => {
+      console.log("move", startPercentRef.current, x)
+
+      let currPercentage =  startPercentRef.current + x / containerWidthRef.current;
+
+      if(currPercentage > 0.99) {
+        currPercentage = 0.9999;
+      }
+      return Math.max(currPercentage, 0.0001)
+    });
+  };
+
+  const initPointDrag = () => {
+    if(!pointRef.current) return;
+
+    const dragObserver = gestureObserver(pointRef.current);
+
+    const dragStart = ({ x }) => {
+      console.log("start", percentage);
+      setPercent(prev => {
+        startPercentRef.current = prev; // 记录开始位置
+        return prev;
+      });
+      onDragStart(x);
+    };
+
+    const dragEnds = () => {
+      onDragEnd(percentage);
+    };
+
+    dragObserver.horizontalMoveStarts.subscribe(dragStart);
+
+    dragObserver.holds.subscribe(dragStart);
+
+    dragObserver.dragMoves.subscribe(dragMoves);
+
+    dragObserver.dragMoveEnds.subscribe(dragEnds);
+
+    dragObserver.horizontalMoves.subscribe(dragMoves);
+
+    dragObserver.horizontalMoveEnds.subscribe(dragEnds);
+  }
+
+  const onDragStart = (x) => {
     console.log(x);
   }
 
-  onDrag= (x) => {
-    console.log(x);
-    this.tranformScore(x);
-  }
-
-  onDragEnd= (x) => {
+  const onDragEnd= (x) => {
     console.log(x);
   }
 
-  renderRuler = () => {
-    const { start, end, step } = this.props;
+  const renderRuler = () => {
     const stepWidth = 100 * step /  (end - start);
     let ruleDom = [];
     let ruleDiv;
@@ -153,40 +152,36 @@ class Ruler extends PureComponent {
     return ruleDom;
   }
 
-  render() {
-    const { value, percentage } = this.state;
-    const { start } = this.props;
-    return (
-      <div className="react-ruler-wrapper">
+  return (
+      <div className={`react-ruler-wrapper ${className}`}>
         <div className="ruler-container">
-          <div className="ruler-wrapper" ref={(list) => { this.ruler = list; }}>
+          <div className="ruler-wrapper" ref={rulerRef}>
             <div className="ruler-list">
               {
-                this.renderRuler()
+                renderRuler()
               }
             </div>
             <div
-              className="ruler-drag"
-              style={{
-                transform: `scaleX(${percentage})`
-              }}
+                className="ruler-drag"
+                style={{
+                  transform: `scaleX(${percentage})`
+                }}
             >
               <div
-                className="ruler-point"
-                ref={(ref) => { this.point = ref; }}
-                style={{
-                  transform: `scaleX(${1 / percentage})`
-                }}
+                  className="ruler-point"
+                  ref={pointRef}
+                  style={{
+                    transform: `scaleX(${1 / percentage})`
+                  }}
               >
-                <div className="point">{value || start}</div>
+                <div className="point">{val || start}</div>
                 <div className="ruler-line" />
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
+  );
 }
 
 export default Ruler;

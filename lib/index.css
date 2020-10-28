@@ -36,8 +36,7 @@
   height: 100%;
   width: 100%;
   z-index: 100;
-  -webkit-transform-origin: left;
-          transform-origin: left;
+  transform-origin: left;
 }
 .react-ruler-wrapper .ruler-drag .ruler-point {
   position: absolute;

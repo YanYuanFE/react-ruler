@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Form } from 'antd';
 import Ruler from './components/ruler';
 import RulerInput from './container/RulerInput';
@@ -7,24 +7,15 @@ import 'antd/dist/antd.css';
 
 const FormItem = Form.Item;
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 57
-    }
+const App = () => {
+  const [form] = Form.useForm();
+  const [value, setValue] = useState(57);
+
+  const handleDragChange = (value) => {
+    setValue(value);
   }
 
-  handleDragChange = (value) => {
-    this.setState({value});
-  }
-
-  render() {
-    const { value } = this.state;
-    const { getFieldDecorator } = this.props.form;
-
-
-    return (
+  return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
@@ -37,37 +28,29 @@ class App extends Component {
           <h3>普通用法</h3>
           <div className="custom-ruler">
             <Ruler
-              value={value}
-              onDrag={this.handleDragChange}
-              start={20}
-              end={99}
-              step={2}
-              className="ruler"
+                value={value}
+                onChange={handleDragChange}
+                start={20}
+                end={99}
+                step={2}
+                className="ruler"
             />
           </div>
           <div className="form-ruler">
             <h3>与antd的Form结合使用</h3>
             <Form>
-              <FormItem>
-                {
-                  getFieldDecorator('score', {
-                    initialValue: 13,
-                    rules: [{ type: 'number' }],
-                  })(
-                    <RulerInput
+              <FormItem name={'score'} rules={[{ type: 'number' }]} initialValue={13}>
+                  <Ruler
                       start={10}
                       end={19}
                       step={1}
-                    />
-                  )
-                }
+                  />
               </FormItem>
             </Form>
           </div>
         </div>
       </div>
-    );
-  }
+  );
 }
 
-export default Form.create()(App);
+export default App;
